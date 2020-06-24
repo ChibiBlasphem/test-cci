@@ -3,7 +3,10 @@ version: 2.1
 executors:
   node:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:12.16
+  php:
+    docker:
+      - image: circleci/php:7.4.7
 
 commands:
   say-hello:
@@ -17,11 +20,14 @@ commands:
 
 jobs:
   hello:
-    executor: node
     parameters:
       username:
         type: string
         default: ""
+      ex:
+        type: executor
+        default: node
+    executor: << parameters.ex >>
     steps:
       - when:
           condition: << parameters.username >>
@@ -51,5 +57,6 @@ workflows:
       - hello:
           name: hello-romain
           username: "Romain"
+          ex: php
           requires:
             - hello
