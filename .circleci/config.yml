@@ -5,6 +5,16 @@ executors:
     docker:
       - image: circleci/node:12
 
+commands:
+  say-hello:
+    parameters:
+      text:
+        type: string
+    steps:
+      - run:
+          name: 'Hello'
+          command: echo "Hello << parameters.text >>"
+
 jobs:
   hello:
     executor: node
@@ -12,9 +22,9 @@ jobs:
       username:
         type: string
     steps:
-      - run:
-          name: 'Hello'
-          command: echo "Hello << parameters.username >>"
+      - say-hello:
+          text: Core << parameters.username >>
+    
 
 workflows:
   version: 2
@@ -25,6 +35,7 @@ workflows:
           name: hello-chris
           username: "Chris"
       - hello:
+          name: hello-romain
           username: "Romain"
           requires:
             - hello-chris
