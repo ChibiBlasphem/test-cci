@@ -22,4 +22,9 @@ workflows:
   main-workflow:
     jobs:
       - hello:
+          name: hello-chris
           username: "Chris"
+      - hello:
+          username: "Romain"
+          requires:
+            - hello-chris
