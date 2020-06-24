@@ -12,8 +12,8 @@ commands:
         type: string
     steps:
       - run:
-          name: 'Hello'
-          command: echo "Hello << parameters.text >>"
+          name: Hello
+          command: echo Hello << parameters.text >>
 
 jobs:
   hello:
@@ -21,9 +21,19 @@ jobs:
     parameters:
       username:
         type: string
+        default: ""
     steps:
-      - say-hello:
-          text: Core << parameters.username >>
+      - when:
+          condition: << parameters.username >>
+          steps:
+            - say-hello:
+                text: Core << parameters.username >>
+      - unless:
+          condition: << parameters.username >>
+          steps:
+            - say-hello:
+                text: world
+
     
 
 workflows:
@@ -32,10 +42,14 @@ workflows:
   main-workflow:
     jobs:
       - hello:
+          name: hello
+      - hello:
           name: hello-chris
           username: "Chris"
+          requires:
+            - hello
       - hello:
           name: hello-romain
           username: "Romain"
           requires:
-            - hello-chris
+            - hello
