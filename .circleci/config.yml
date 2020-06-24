@@ -1,0 +1,25 @@
+version: 2.1
+
+executors:
+  node:
+    docker:
+      - image: circleci/node:12
+
+jobs:
+  hello:
+    executor: node
+    parameters:
+      username:
+        type: string
+    steps:
+      - run:
+          name: 'Hello'
+          command: echo "Hello << parameters.username >>"
+
+workflows:
+  version: 2
+
+  main-workflow:
+    jobs:
+      - hello:
+          username: "Chris"
